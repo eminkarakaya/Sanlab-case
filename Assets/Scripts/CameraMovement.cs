@@ -3,21 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
-{
-    private Vector3 _smoothVelocity = Vector3.zero;
-    [SerializeField] private float _smoothTime = 3f;
-    private Vector3 _currentRotation;
-    [SerializeField] private float _moveSpeed;
-    Camera _camera;
-    [SerializeField] private float _minZoom,_maxZoom;
-    private const string MOUSE_SCROLLWHEEL = "Mouse ScrollWheel";
+{ 
     private const string MOUSE_X = "Mouse X",MOUSE_Y = "Mouse Y";
+    private const string MOUSE_SCROLLWHEEL = "Mouse ScrollWheel";
+    [Header("Panning Clamp")]
+    [SerializeField] private float xMin;
+    [SerializeField] private float xMax,yMin,yMax,zMin,zMax,cameraPanningSensitivity;
+
+    [Space(20)]
+    [SerializeField] private float _smoothTime = 3f;
+    [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _minZoom,_maxZoom;
     [SerializeField] private float _zoomSpeed;
     [SerializeField] private float _mouseSensitivity = 3.0f;
-    private float _rotationY,_rotationX;
     [SerializeField] private Transform _target;
+
+    private float _rotationY,_rotationX;
+    private Vector3 _currentRotation;
+    private Camera _camera;
+    private Vector3 _smoothVelocity = Vector3.zero;
     [SerializeField] private float _distanceFromTarget;
-    [SerializeField] private Vector3 startPixel;
+    private Vector3 startPixel;
+    private Vector3 currentPosition;
+    private Vector3 deltaPositon;
+    private Vector3 lastPositon;
 
     private void Start() {
         _camera= Camera.main;
@@ -47,18 +56,22 @@ public class CameraMovement : MonoBehaviour
         transform.localEulerAngles = new Vector3(_rotationX,_rotationY,0);
         transform.position = _target.position - transform.forward * _distanceFromTarget;
 
-        if(Input.GetMouseButtonDown(0))
+        currentPosition = Input.mousePosition;
+        deltaPositon = currentPosition-lastPositon;
+        lastPositon = currentPosition;
+        _target.transform.rotation = _camera.transform.rotation;
+        
+        if(Input.GetMouseButton(2))
         {
 
+            _target.transform.Translate(-deltaPositon * Time.deltaTime*cameraPanningSensitivity,Space.Self);
+            Vector3 pos = _target.transform.position;
+            pos.x = Mathf.Clamp(pos.x,xMin,xMax); 
+            pos.y = Mathf.Clamp(pos.y,yMin,yMax); 
+            pos.z = Mathf.Clamp(pos.z,zMin,zMax); 
+            _target.transform.position = pos;
         }
-        else if(Input.GetMouseButton(0))
-        {
-            
-        }
-        else if(Input.GetMouseButtonUp(0))
-        {
-
-        }
+        
 
 
 
