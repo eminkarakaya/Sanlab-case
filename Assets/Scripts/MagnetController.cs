@@ -5,6 +5,7 @@ using System;
 using DG.Tweening;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System.Threading.Tasks;
 
 public enum TaskSide
 {
@@ -22,6 +23,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
 
     Camera cam;
     public UnityEvent OnMouseUpEvent;
+    public UnityEvent<float> AnimationEvent;
     [SerializeField] private Vector3 offset;
     [SerializeField] private float zCoordinate;
     Order task;
@@ -30,9 +32,11 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     public TransformData transformData;
     public bool isStick;
     Outline outline;
-    public float distance;
+    public float distance,saydamDistance;
     public Transform target;
     private bool isSelected;
+    private bool isInAnimation;
+    private Vector3 startDragPos;
     public bool IsSelected{get => isSelected; set{
         isSelected = value;
     }}
@@ -50,6 +54,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         }
     }
     private void OnMouseDown() {
+        if(isInAnimation) return;
         if(isStick)
         {
             if(CheckPrevTasks() )
@@ -58,6 +63,19 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
                 return;
             }
         }
+        if(transformData.target == null)
+        {
+            foreach (var item in transformData.detectTargets)
+            {
+                if(!item.isFull)
+                    item.GetComponent<MeshRenderer>().enabled = true;
+            }
+        }
+        else
+        {
+            transformData.target.GetComponent<MeshRenderer>().enabled = true;
+        }
+        startDragPos = transform.position;
         transform.parent  = null;
         zCoordinate = cam.WorldToScreenPoint(transform.position).z;
         offset = transform.position - GetMouseWorldPos();
@@ -66,8 +84,30 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     }
     private void OnMouseUp() {
         if(!isSelected) return;
+
+        if(isStick)
+        {
+            if(CheckPrevTasks() )
+            {
+
+            Debug.Log("checkprevtask");
+            transform.position = startDragPos;
+            return;
+            }
+        
+        }
         IsSelected = false;
         OnMouseUpEvent?.Invoke();
+        if(transformData.target == null)
+        {
+            foreach (var item in transformData.detectTargets)
+            {
+                
+                item.GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+        else
+            transformData.target.GetComponent<MeshRenderer>().enabled = false;
     }
     
     private void OnMouseDrag() {
@@ -134,7 +174,13 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
                 isStick = false;
                 return;
             }
-            transform.position = target.transform.position;
+            isInAnimation = true;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOMove(transformData.detectTargets[detectTargetIndex].GetAnimPos(),1).OnComplete(()=>AnimationEvent?.Invoke(1)));
+            sequence.Append(transform.DOMove(target.transform.position,1).OnComplete(()=>isInAnimation = false));
+            
+            
+            // transform.position = target.transform.position;
             MakeParent();
         }
         else
@@ -199,5 +245,5 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     {
         outline.enabled = false;
     }
-
+    
 }
