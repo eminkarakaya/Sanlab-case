@@ -17,7 +17,6 @@ public class ScrewAnimation : MonoBehaviour
         while(passedTime<dur)
         {
             passedTime += Time.deltaTime;
-            Debug.Log(transform.rotation + " transform.rotation ");
             transform.Rotate(rotVector,space);
             yield return null;
         }
