@@ -29,6 +29,7 @@ public class GameManager : Singleton<GameManager>
         {
             item.SetParent(null);
             item.transform.position = new Vector3(Random.Range(min.x,max.x),Random.Range(min.y,max.y),Random.Range(min.z,max.z));
+            item.GetComponent<MagnetController>().Restart();
         }
         OnRestart?.Invoke();
     }
@@ -39,6 +40,7 @@ public class GameManager : Singleton<GameManager>
         {
             transforms[i].SetParent(null);
             transforms[i].position = startPositions[i]; 
+            transforms[i].GetComponent<MagnetController>().Restart();
         }
         OnRestart?.Invoke();
     }

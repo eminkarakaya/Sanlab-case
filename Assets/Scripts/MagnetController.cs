@@ -267,5 +267,12 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     {
         outline.enabled = false;
     }
-    
+    public void Restart()
+    {
+        isStick = false;
+        foreach (var item in transformData.detectTargets)
+        {
+            item.isFull = false;
+        }
+    }
 }
