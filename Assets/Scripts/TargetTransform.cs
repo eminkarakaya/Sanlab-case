@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class TargetTransform : MonoBehaviour
 {
-    public bool isFull;
-    public Vector3 sideMultiplier;
+    public bool isFull; // civatanın girecegi yuva dolu mu. 
+    public Vector3 animationOffset; // animasyon hangi taraftan ve ne mesafeden başlayacak
     public Vector3 GetAnimPos()
     {        
-        return transform.position + (transform.right * sideMultiplier.x) + (transform.up * sideMultiplier.y) + (transform.forward * sideMultiplier.z); 
+        return transform.position + (transform.right * animationOffset.x) + (transform.up * animationOffset.y) + (transform.forward * animationOffset.z); 
     }
 }

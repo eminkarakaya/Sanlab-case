@@ -2,23 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+[System.Serializable]
+public class Order 
+{
+    public bool IsDone;
+    public GameObject taskObject;
+    public List<int> bagliDegil;
+}
+
+
+
 // unity de iç içe classlar inspectorda gorulmedigi icin boyle bir cozum buldum.
 [System.Serializable]
 public class ListClass
 {
     public List<Order> tasks;
 }
-public class TaskManager : MonoBehaviour
+public class TaskManager : Singleton<TaskManager>
 {
     public UnityEvent OnFinish;
-    [SerializeField] private List<GameObject> resettenSonraKapanacakObjeler;
+    [SerializeField] private GameObject finishText;
     [SerializeField] private List<ListClass> tasks;
     public bool isFinish {get; private set;}
-    public static TaskManager instance;
-    private void Awake() {
-        instance = this;
-    }
-    
+  
     public Order GetTask(TaskSide taskSide,int index)
     {
         if(taskSide == TaskSide.Up)
@@ -33,12 +40,10 @@ public class TaskManager : MonoBehaviour
     [ContextMenu("Finish")]
     public void Finish()
     {
-        Camera.main.GetComponent<CameraMovement>().CamAnimation(2f);
+        Camera.main.GetComponent<CameraMovement>().CameraFinishAnimation(2f);
+        SoundManager.Instance.FinishSoundEffect();
         isFinish = true;
-        foreach (var item in resettenSonraKapanacakObjeler)
-        {
-            item.SetActive(true);
-        }
+        finishText.SetActive(true);
         OnFinish?.Invoke();
     }
     public bool CheckFinish()
@@ -61,10 +66,7 @@ public class TaskManager : MonoBehaviour
     /// </summary>
     public void Restart()
     {
-        foreach (var item in resettenSonraKapanacakObjeler)
-        {
-            item.SetActive(false);
-        }
+        finishText.SetActive(false);
         RestartTasks();
         isFinish = false;
     }

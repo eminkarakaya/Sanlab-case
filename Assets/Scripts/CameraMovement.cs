@@ -36,15 +36,20 @@ public class CameraMovement : MonoBehaviour
     }
 
     private void Update() {
-        if(TaskManager.instance.isFinish) 
+        if(TaskManager.Instance.isFinish) 
             return;
+
+            // Zoom
         float zoomAmount = Input.GetAxis(MOUSE_SCROLLWHEEL);
         if(zoomAmount != 0)
         {
             distanceFromTarget -= zoomAmount*zoomSpeed;
             distanceFromTarget = Mathf.Clamp(distanceFromTarget,minZoom,maxZoom);
         }
-        if(Input.GetMouseButton(1)) // rotate
+
+        // rotate
+
+        if(Input.GetMouseButton(1)) 
         {
             float mouseX = Input.GetAxis(MOUSE_X)*mouseSensitivity;
             float mouseY = Input.GetAxis(MOUSE_Y)*mouseSensitivity;
@@ -66,7 +71,9 @@ public class CameraMovement : MonoBehaviour
         lastPositon = currentPosition;
         target.transform.rotation = _camera.transform.rotation;
         
-        if(Input.GetMouseButton(2)) // movement
+        // movement
+
+        if(Input.GetMouseButton(2)) 
         {
 
             target.transform.Translate(-deltaPositon * Time.deltaTime*cameraPanningSensitivity,Space.Self);
@@ -78,18 +85,17 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-     
-    [ContextMenu("CamAnimationNoParam")]
-    public void CamAnimationNoParam(){
-        transform.DOMove(cameraFinishPoint.position,cameraAnimationDuration);
-        transform.DORotate(cameraFinishPoint.rotation.eulerAngles,cameraAnimationDuration).OnComplete(()=>StartCoroutine(RotateAroundFinishAnim(2)));
-        GetComponent<CameraMovement>().enabled = false;
-    }
-    public void CamAnimation(float dur ){
+
+
+    public void CameraFinishAnimation(float dur ){
+        GameManager.Instance.isInAnimation = true;
         target.transform.position = Vector3.zero;
-        transform.DOMove(cameraFinishPoint.position,dur);
+        transform.DOMove(cameraFinishPoint.position,dur).OnComplete(()=> 
+            {
+                
+                this.enabled = false;
+            });;
         transform.DORotate(cameraFinishPoint.rotation.eulerAngles,dur).OnComplete(()=>StartCoroutine(RotateAroundFinishAnim(dur)));
-        GetComponent<CameraMovement>().enabled = false;
     }
     IEnumerator RotateAroundFinishAnim(float dur)
     {
@@ -100,5 +106,6 @@ public class CameraMovement : MonoBehaviour
             transform.RotateAround(target.transform.position, Vector3.up , 200 * Time.deltaTime);
             yield return null;
         }
+        GameManager.Instance.isInAnimation= false;
     }
 }

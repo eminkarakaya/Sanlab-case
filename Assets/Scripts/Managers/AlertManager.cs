@@ -5,17 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
-public class AlertManager : MonoBehaviour
+public class AlertManager : Singleton<AlertManager>
 {
-    public static AlertManager instance;
-    private void Awake() {
-        instance = this;
-    }
-    [SerializeField] private Image fadeImage;
+    private Image fadeImage;
     [SerializeField] private float duration;
     [SerializeField] private GameObject alertPrefab;
 
-    [SerializeField] private TMP_Text alertText;
+    private TMP_Text alertText;
     [SerializeField] private float yOffset;
     [SerializeField] private Transform parentAlert;
    

@@ -20,14 +20,14 @@ public class TransformData
 }
 public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerExitHandler
 {
-    private const string cikarmaAlert = "Objeyi Çıkarmak İçin Önce Kırmızı Objeleri Çıkarmalısınız.",koymaAlert = "Kırmızı nesneler objeyi yerleştirmeye engel oluyor.";
+    private const string extractionAlert = "Objeyi Çıkarmak İçin Önce Kırmızı Objeleri Çıkarmalısınız.",stickAlert = "Kırmızı nesneler objeyi yerleştirmeye engel oluyor.";
     public UnityEvent<float> AnimationEvent;
     [Header("Task")]
     [SerializeField] private int taskIndex;
     [SerializeField] private TaskSide taskSide;
     [SerializeField] private TransformData transformData;
     [SerializeField] private float stickDistance;
-    [SerializeField] private Vector3 offset;
+    private Vector3 offset;
     private Camera cam;
     private float zCoordinate;
     private Order task;
@@ -35,12 +35,12 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     private Outline outline;
     [SerializeField] private Transform target;
     private Vector3 startDragPos;
-    private bool isSelected;
+    private bool isSelected; // onMouseDown da true onMouseUp da false olur.  sadece hareket edecek objenin update' si çalışır. dıgerlerınınki boşa çalışmaz.
     private int detectTargetIndex;
     private void Start() {
         cam = Camera.main;
         outline = GetComponent<Outline>();
-        task = TaskManager.instance.GetTask(taskSide,taskIndex);
+        task = TaskManager.Instance.GetTask(taskSide,taskIndex);
         
         if(transformData.target != null)
         {
@@ -48,20 +48,29 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         }
     }
     private void OnMouseDown() {
-        if( GameManager.instance.isInAnimation) 
+
+        if(TaskManager.Instance.isFinish) return;
+        // animasyon oynarken hareket ettiremeyiz.
+        if(GameManager.Instance.isInAnimation) 
         {
-            AlertManager.instance.ShowAlert("Animasyonun Bitmesini Bekleyin.");
+            AlertManager.Instance.ShowAlert("Animasyonun Bitmesini Bekleyin.");
             return;
         }
+        
+
+        // eger monte edilmişse ve kaldırmak istiyosak engelleyen obje var mı (örnegin civatalar takıldıysa civataları çıkarmadan içindekı nesnelerı çıkaramayız.)
+        // varsa o objeleri işaretler ve hata mesajı verir.
         if(isStick)
         {
-            if(CheckPrevTasks() )
+            if(CheckIfObstacles())
             {
-                AlertManager.instance.ShowAlert(cikarmaAlert);
+                FailAlert(extractionAlert);
                 return;
             }
             transformData.detectTargets[detectTargetIndex].isFull = false;
         }
+
+        // objenın gıdecegi yer eger dolu degılse şeffaf silüeti çıkar.---
         if(transformData.target == null)
         {
             foreach (var item in transformData.detectTargets)
@@ -74,21 +83,27 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         {
             transformData.target.GetComponent<MeshRenderer>().enabled = true;
         }
-        startDragPos = transform.position;
-        transform.parent  = null;
-        zCoordinate = cam.WorldToScreenPoint(transform.position).z;
-        offset = transform.position - GetMouseWorldPos();
+        // ---
         isSelected= true;
         task.IsDone = false;
+        transform.parent  = null;
+
+        // hareket pozisyonları ayarlanıyor.
+        startDragPos = transform.position;
+        zCoordinate = cam.WorldToScreenPoint(transform.position).z;
+        offset = transform.position - GetMouseWorldPos();
     }
     private void OnMouseUp() {
         if(!isSelected) return;
 
+        // eger monte edcegimiz objeyı engelleyen objeler varsa o objeleri işaretler ve hata mesajı verir. 
+        // (ornegın civataları takılmış yerin içine obje yerlestirmek istersek civataları işaretler ve hata mesajı verir.)
         if(isStick)
         {
-            if(CheckPrevTasks() )
+            if(CheckIfObstacles() )
             {
-                AlertManager.instance.ShowAlert(koymaAlert);
+                FailAlert(stickAlert);
+                
                 transform.position = startDragPos;
                 if(transformData.target == null)
                 {
@@ -133,7 +148,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         
         for (int i = 0; i < transformData.detectTargets.Count; i++)
         {
-            
+            // yapışma mesafesindeyse
             if(Vector3.Distance(transformData.detectTargets[i].transform.position , transform.position)<stickDistance)
             {
                 if(transformData.detectTargets[i].isFull)
@@ -148,6 +163,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
                 outline.OutlineColor = Color.green;
                 break;
             }
+            // yapışma mesafesınde degılse
             else
             {
                 if(transformData.target == null)
@@ -160,26 +176,33 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
             }
         }
     }
+    private void FailAlert(string alertText)
+    {
+        AlertManager.Instance.ShowAlert(alertText);
+        outline.enabled = false;
+        SoundManager.Instance.FailSoundEffect();
+    }
     public void Stick()
     {
         if(isStick)
         {
             task.IsDone = true;
             transformData.detectTargets[detectTargetIndex].isFull = true;
-            if(CheckPrevTasks())
+            if(CheckIfObstacles())
             {
-                AlertManager.instance.ShowAlert(koymaAlert);
+                FailAlert(stickAlert);
                 isStick = false;
                 return;
             }
             // animasyon ---
-            GameManager.instance.isInAnimation = true;
+            GameManager.Instance.isInAnimation = true;
+            SoundManager.Instance.SuccessSoundEffect();
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(transform.DOMove(transformData.detectTargets[detectTargetIndex].GetAnimPos(),1).OnComplete(()=>AnimationEvent?.Invoke(1)));
-            sequence.Append(transform.DOMove(target.transform.position,1).OnComplete(()=>
+            sequence.Append(transform.DOMove(transformData.detectTargets[detectTargetIndex].GetAnimPos(),.5f).OnComplete(()=>AnimationEvent?.Invoke(1f)));
+            sequence.Append(transform.DOMove(target.transform.position,.5f).OnComplete(()=>
             {
-                GameManager.instance.isInAnimation = false;
-                TaskManager.instance.CheckFinish();
+                GameManager.Instance.isInAnimation = false;
+                TaskManager.Instance.CheckFinish();
             }));
             // ---
 
@@ -196,9 +219,9 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     /// objeyi monte ederken veya çıkarırken engelleyen objeler varsa o objelerin outline'larını kırmızı yapar.
     /// </summary>
     /// <returns></returns>
-    public bool CheckPrevTasks()
+    public bool CheckIfObstacles()
     {
-        List<Order> tasks =  TaskManager.instance.GetTasks(taskSide,taskIndex);
+        List<Order> tasks =  TaskManager.Instance.GetTasks(taskSide,taskIndex);
         if(tasks.Count > 0)
         {
             for (int i = 0; i < tasks.Count; i++)
@@ -237,7 +260,6 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // eventData.pointerEnter.GetComponent<Outline>().enabled = true;
         outline.enabled = true;
     }
 

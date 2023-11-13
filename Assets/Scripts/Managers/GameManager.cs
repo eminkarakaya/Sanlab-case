@@ -2,18 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager instance;
     [SerializeField] private GameObject previewObj;
     public bool isInAnimation;
     public UnityEvent OnRestart;
-    private Vector3[] startPositions;
-    [SerializeField] private List<Transform> transforms;
+    private Vector3[] startPositions; // restart yapmak için objelerin ilk pozisyonlarını tutar.
+    [SerializeField] private List<Transform> transforms; // 
     [SerializeField] private Vector3 min,max;
-    private void Awake() {
-        instance = this;
-    }
+    
     private void Start() {
         AssignStartPositions();
     }
@@ -25,7 +22,7 @@ public class GameManager : MonoBehaviour
             startPositions[i] = transforms[i].position;
         }
     }
-    public void RandomTransforms()
+    public void RestartRandomPositions()
     {
         if(isInAnimation) return;
         foreach (var item in transforms)
@@ -35,7 +32,7 @@ public class GameManager : MonoBehaviour
         }
         OnRestart?.Invoke();
     }
-    public void OldPos()
+    public void RestartOldPosition()
     {
         if(isInAnimation) return;
         for (int i = 0; i < transforms.Count; i++)
@@ -64,4 +61,5 @@ public class GameManager : MonoBehaviour
         }
         previewObj.SetActive(false);
     }
+   
 }

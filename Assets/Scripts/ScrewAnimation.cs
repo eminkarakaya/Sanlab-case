@@ -7,11 +7,11 @@ public class ScrewAnimation : MonoBehaviour
 {
     [SerializeField] private Vector3 rotVector;
     [SerializeField] private Space space;
-    public void ScrewSpinAnimation(float dur)
+    public void ScrewRotationAnimation(float dur)
     {
-        StartCoroutine(TurnAnim(dur));
+        StartCoroutine(TurnAnimation(dur));
     }
-    private IEnumerator TurnAnim(float dur)
+    private IEnumerator TurnAnimation(float dur)
     {
         var passedTime = 0f;
         while(passedTime<dur)
