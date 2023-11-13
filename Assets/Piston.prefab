@@ -129,7 +129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: -0.1, z: 0}
 --- !u!114 &4844886116432898209
 MonoBehaviour:
@@ -194,7 +193,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: 0}
 --- !u!1 &2218932012946110817
 GameObject:
@@ -325,7 +323,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: -0.2}
 --- !u!114 &8519479944655536152
 MonoBehaviour:
@@ -390,7 +387,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: 0}
 --- !u!1 &4573440374488001735
 GameObject:
@@ -508,7 +504,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0.1, z: 0}
 --- !u!1 &4879379697762637922
 GameObject:
@@ -610,7 +605,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: 0}
 --- !u!114 &470416651515430790
 MonoBehaviour:
@@ -728,7 +722,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: -0.3}
 --- !u!114 &5223746935624047515
 MonoBehaviour:
@@ -846,7 +839,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: -0.3}
 --- !u!114 &7120677222353937590
 MonoBehaviour:
@@ -982,7 +974,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: 0.2}
 --- !u!1 &8022659630579224085
 GameObject:
@@ -1082,7 +1073,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: 0.2}
 --- !u!114 &697333178973657176
 MonoBehaviour:
@@ -1200,7 +1190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFull: 0
-  detectTransform: {fileID: 0}
   sideMultiplier: {x: 0, y: 0, z: -0.2}
 --- !u!114 &6512716506228473941
 MonoBehaviour:
@@ -1230,7 +1219,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 3a0e56e516d9ded4488b0cb0c07a1a56, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3a0e56e516d9ded4488b0cb0c07a1a56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1275,7 +1264,7 @@ PrefabInstance:
     - target: {fileID: -8599926122936088681, guid: 3a0e56e516d9ded4488b0cb0c07a1a56, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f137485d83925a545ab0096b23a12a84, type: 2}
+      objectReference: {fileID: 2100000, guid: 468394ff02c81124b9a7ff71cd857441, type: 2}
     - target: {fileID: -8236753212674733213, guid: 3a0e56e516d9ded4488b0cb0c07a1a56, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1656,24 +1645,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 0
   taskIndex: 2
+  taskSide: 0
   transformData:
     detectTargets:
     - {fileID: 5721295304308029229}
     - {fileID: 4906828025280478400}
     target: {fileID: 0}
-  isStick: 0
-  distance: 0.2
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!1 &520895095381454701 stripped
 GameObject:
@@ -1732,24 +1715,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 0
   taskIndex: 3
+  taskSide: 0
   transformData:
     detectTargets:
     - {fileID: 5721295304308029229}
     - {fileID: 4906828025280478400}
     target: {fileID: 0}
-  isStick: 0
-  distance: 0.2
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!4 &667816180205023872 stripped
 Transform:
@@ -1863,23 +1840,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 1
   taskIndex: 0
+  taskSide: 1
   transformData:
     detectTargets:
     - {fileID: 8234273579414561013}
     target: {fileID: 5861535161625037847}
-  isStick: 0
-  distance: 0.3
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!1 &3790358805607104924 stripped
 GameObject:
@@ -1938,23 +1909,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 0
   taskIndex: 0
+  taskSide: 0
   transformData:
     detectTargets:
     - {fileID: 3508455083959227301}
     target: {fileID: 1251428848324734403}
-  isStick: 0
-  distance: 0.2
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!1 &4628690454588171684 stripped
 GameObject:
@@ -2013,23 +1978,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 1
   taskIndex: 1
+  taskSide: 1
   transformData:
     detectTargets:
     - {fileID: 8347909329770564040}
     target: {fileID: 9137107960096334899}
-  isStick: 0
-  distance: 0.3
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!4 &5858695394897553044 stripped
 Transform:
@@ -2098,9 +2057,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2116,18 +2072,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 1
   taskIndex: 3
+  taskSide: 1
   transformData:
     detectTargets:
     - {fileID: 4002209993793457747}
     - {fileID: 6534188991246819920}
     target: {fileID: 0}
-  isStick: 0
-  distance: 0.3
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!114 &8511873859924854886
 MonoBehaviour:
@@ -2200,9 +2153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2218,18 +2168,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 1
   taskIndex: 4
+  taskSide: 1
   transformData:
     detectTargets:
     - {fileID: 4002209993793457747}
     - {fileID: 6534188991246819920}
     target: {fileID: 0}
-  isStick: 0
-  distance: 0.3
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!114 &386796404270492899
 MonoBehaviour:
@@ -2302,23 +2249,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 1
   taskIndex: 2
+  taskSide: 1
   transformData:
     detectTargets:
     - {fileID: 3471637351975638748}
     target: {fileID: 4417080866984887569}
-  isStick: 0
-  distance: 0.2
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!1 &9152367555490387319 stripped
 GameObject:
@@ -2355,24 +2296,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129b0a1a35591074f8e493faf504b654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnMouseUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
   AnimationEvent:
     m_PersistentCalls:
       m_Calls: []
-  offset: {x: 0, y: 0, z: 0}
-  zCoordinate: 0
-  taskSide: 0
   taskIndex: 1
+  taskSide: 0
   transformData:
     detectTargets:
     - {fileID: 1594881589835717448}
     - {fileID: 8712980526868194547}
     target: {fileID: 9194086753315143195}
-  isStick: 0
-  distance: 0.3
-  saydamDistance: 0
+  stickDistance: 0.2
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
 --- !u!136 &9169488811224787384
 CapsuleCollider:

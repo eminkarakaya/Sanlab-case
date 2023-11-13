@@ -31,7 +31,6 @@ public class AlertManager : MonoBehaviour
         fadeImage.DOFade(0,duration).OnComplete(()=>{
                 Destroy(obj,4f);
             });
-            Debug.Log(obj,obj);
     }
     public void ShowAlert(string alertContent)
     {

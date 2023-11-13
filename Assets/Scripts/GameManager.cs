@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         if(isInAnimation) return;
         foreach (var item in transforms)
         {
+            item.SetParent(null);
             item.transform.position = new Vector3(Random.Range(min.x,max.x),Random.Range(min.y,max.y),Random.Range(min.z,max.z));
         }
         OnRestart?.Invoke();
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         if(isInAnimation) return;
         for (int i = 0; i < transforms.Count; i++)
         {
+            transforms[i].SetParent(null);
             transforms[i].position = startPositions[i]; 
         }
         OnRestart?.Invoke();

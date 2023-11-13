@@ -21,30 +21,26 @@ public class TransformData
 public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerExitHandler
 {
     private const string cikarmaAlert = "Objeyi Çıkarmak İçin Önce Kırmızı Objeleri Çıkarmalısınız.",koymaAlert = "Kırmızı nesneler objeyi yerleştirmeye engel oluyor.";
-    Camera cam;
-    public UnityEvent OnMouseUpEvent;
     public UnityEvent<float> AnimationEvent;
+    [Header("Task")]
+    [SerializeField] private int taskIndex;
+    [SerializeField] private TaskSide taskSide;
+    [SerializeField] private TransformData transformData;
+    [SerializeField] private float stickDistance;
     [SerializeField] private Vector3 offset;
-    [SerializeField] private float zCoordinate;
-    Order task;
-    public TaskSide taskSide;
-    public int taskIndex;
-    public TransformData transformData;
-    public bool isStick;
-    Outline outline;
-    public float distance,saydamDistance;
-    public Transform target;
-    private bool isSelected;
+    private Camera cam;
+    private float zCoordinate;
+    private Order task;
+    private bool isStick; // obje gidecegi yere yeterince yaklaşırsa true olur, uzaklaşırsa false.
+    private Outline outline;
+    [SerializeField] private Transform target;
     private Vector3 startDragPos;
-    public bool IsSelected{get => isSelected; set{
-        isSelected = value;
-    }}
+    private bool isSelected;
     private int detectTargetIndex;
     private void Start() {
         cam = Camera.main;
         outline = GetComponent<Outline>();
         task = TaskManager.instance.GetTask(taskSide,taskIndex);
-        OnMouseUpEvent.AddListener(Stick);
         
         if(transformData.target != null)
         {
@@ -52,15 +48,19 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         }
     }
     private void OnMouseDown() {
-        if( GameManager.instance.isInAnimation) return;
+        if( GameManager.instance.isInAnimation) 
+        {
+            AlertManager.instance.ShowAlert("Animasyonun Bitmesini Bekleyin.");
+            return;
+        }
         if(isStick)
         {
             if(CheckPrevTasks() )
             {
                 AlertManager.instance.ShowAlert(cikarmaAlert);
-                Debug.Log("checkprevtask");
                 return;
             }
+            transformData.detectTargets[detectTargetIndex].isFull = false;
         }
         if(transformData.target == null)
         {
@@ -78,7 +78,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         transform.parent  = null;
         zCoordinate = cam.WorldToScreenPoint(transform.position).z;
         offset = transform.position - GetMouseWorldPos();
-        IsSelected= true;
+        isSelected= true;
         task.IsDone = false;
     }
     private void OnMouseUp() {
@@ -88,15 +88,24 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         {
             if(CheckPrevTasks() )
             {
-                Debug.Log("checkprevtask");
                 AlertManager.instance.ShowAlert(koymaAlert);
                 transform.position = startDragPos;
+                if(transformData.target == null)
+                {
+                    foreach (var item in transformData.detectTargets)
+                    {
+                        
+                        item.GetComponent<MeshRenderer>().enabled = false;
+                    }
+                }
+                else
+                    transformData.target.GetComponent<MeshRenderer>().enabled = false;
                 return;
             }
         
         }
-        IsSelected = false;
-        OnMouseUpEvent?.Invoke();
+        isSelected = false;
+        Stick();
         if(transformData.target == null)
         {
             foreach (var item in transformData.detectTargets)
@@ -117,7 +126,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
     private void Update() {
 
         // secılı degılse bosa calismasin
-        if(!IsSelected)
+        if(!isSelected)
         {
             return;
         }
@@ -125,7 +134,7 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         for (int i = 0; i < transformData.detectTargets.Count; i++)
         {
             
-            if(Vector3.Distance(transformData.detectTargets[i].transform.position , transform.position)<distance)
+            if(Vector3.Distance(transformData.detectTargets[i].transform.position , transform.position)<stickDistance)
             {
                 if(transformData.detectTargets[i].isFull)
                     continue;
@@ -157,20 +166,24 @@ public class MagnetController : MonoBehaviour ,IPointerEnterHandler , IPointerEx
         {
             task.IsDone = true;
             transformData.detectTargets[detectTargetIndex].isFull = true;
-            if(TaskManager.instance.IsFinish())
-            {
-                
-            }
             if(CheckPrevTasks())
             {
                 AlertManager.instance.ShowAlert(koymaAlert);
                 isStick = false;
                 return;
             }
+            // animasyon ---
             GameManager.instance.isInAnimation = true;
             Sequence sequence = DOTween.Sequence();
             sequence.Append(transform.DOMove(transformData.detectTargets[detectTargetIndex].GetAnimPos(),1).OnComplete(()=>AnimationEvent?.Invoke(1)));
-            sequence.Append(transform.DOMove(target.transform.position,1).OnComplete(()=>GameManager.instance.isInAnimation = false));
+            sequence.Append(transform.DOMove(target.transform.position,1).OnComplete(()=>
+            {
+                GameManager.instance.isInAnimation = false;
+                TaskManager.instance.CheckFinish();
+            }));
+            // ---
+
+
             MakeParent();
         }
         else

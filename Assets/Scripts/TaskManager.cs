@@ -41,7 +41,7 @@ public class TaskManager : MonoBehaviour
         }
         OnFinish?.Invoke();
     }
-    public bool IsFinish()
+    public bool CheckFinish()
     {
         for (int i = 0; i < tasks.Count; i++)
         {

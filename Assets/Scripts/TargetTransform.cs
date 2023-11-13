@@ -5,7 +5,6 @@ using UnityEngine;
 public class TargetTransform : MonoBehaviour
 {
     public bool isFull;
-    public Transform detectTransform;
     public Vector3 sideMultiplier;
     public Vector3 GetAnimPos()
     {        
